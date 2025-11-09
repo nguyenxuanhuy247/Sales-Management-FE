@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -31,11 +31,11 @@ import {BaseComponent} from '../base/base.component';
     ReactiveFormsModule,
   ]
 })
-export class UserProfileComponent extends BaseComponent implements OnInit {
+export class UserProfileComponent extends BaseComponent implements OnInit, OnDestroy {
   userResponse?: UserResponse;
   token: string = '';
   formBuilder: FormBuilder = inject(FormBuilder);
-
+  channel!: BroadcastChannel;
 
   userProfileForm: FormGroup = this.formBuilder.group({
     fullname: [''],
@@ -47,7 +47,23 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
     validators: this.passwordMatchValidator() // Custom validator function for password match
   });
 
+  handleVisibility = () => {
+    console.log("Chuyển Tab ", document.hidden);
+    if (document.hidden) {
+      this.channel.postMessage({ type: 'USER_PROFILE_UPDATED', payload: this.userProfileForm.value });
+    }
+  };
+
   ngOnInit(): void {
+    this.channel = new BroadcastChannel('user-profile');
+    this.channel.onmessage = (event) => {
+      if (event.data && event.data.type === 'USER_PROFILE_UPDATED') {
+        const payload = event.data.payload;
+        this.userProfileForm.setValue(payload)
+      }
+    };
+    document.addEventListener('visibilitychange', this.handleVisibility);
+
     this.token = this.tokenService.getToken();
     this.userService.getUserDetail(this.token).subscribe({
       next: (response: any) => {
@@ -69,6 +85,11 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.channel.close();
+    document.removeEventListener('visibilitychange', this.handleVisibility);
+  }
+
   passwordMatchValidator(): ValidatorFn {
     return (formGroup: AbstractControl): ValidationErrors | null => {
       const password = formGroup.get('password')?.value;
@@ -82,6 +103,7 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
   }
 
   save(): void {
+
     if (this.userProfileForm.valid) {
       const updateUserDTO: UpdateUserDTO = {
         fullname: this.userProfileForm.get('fullname')?.value,
