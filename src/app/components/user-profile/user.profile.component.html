@@ -1,9 +1,9 @@
 <app-header></app-header>
 <form [formGroup]="userProfileForm"> 
 <div class="row">
-    <div class="col-md-3 mx-auto">
+    <div class="col-md-6 mx-auto">
         <h2 class="product-header">Thông tin người dùng</h2>
-            <div class="mb-3">
+            <div class="mb-6">
                 <label for="fullname" class="form-label">Họ và tên</label>
                 <input type="text" 
                     formControlName="fullname" 
@@ -60,11 +60,13 @@
                        id="retype_password" 
                        [class.is-invalid]="userProfileForm.get('retype_password')!.invalid 
                           && userProfileForm.get('retype_password')!.touched">
-                  @if(userProfileForm.hasError('passwordMismatch')) {
-                    <div class="invalid-feedback">
+                  @if(userProfileForm.get('retype_password')!.touched &&
+                    userProfileForm.get('retype_password')!.value &&
+                    userProfileForm.hasError('passwordMismatch')) {
+                    <div class="invalid-feedback" style="display: block">
                       Mật khẩu không khớp.
                     </div>
-                  }                  
+                  }
               </div>              
               <div class="text-center">
                 <button type="button" 

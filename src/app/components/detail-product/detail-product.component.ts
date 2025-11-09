@@ -1,25 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { Product } from '../../models/product';
-import { environment } from '../../../environments/environment';
-import { ProductImage } from '../../models/product.image';
-import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
-import { CommonModule } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ApiResponse } from '../../responses/api.response';
-import { HttpErrorResponse } from '@angular/common/http';
-import { BaseComponent } from '../base/base.component';
+import {Component, OnInit} from '@angular/core';
+import {Product} from '../../models/product';
+import {environment} from '../../../environments/environment';
+import {ProductImage} from '../../models/product.image';
+import {HeaderComponent} from '../header/header.component';
+import {FooterComponent} from '../footer/footer.component';
+import {CommonModule} from '@angular/common';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {ApiResponse} from '../../responses/api.response';
+import {HttpErrorResponse} from '@angular/common/http';
+import {BaseComponent} from '../base/base.component';
 
 @Component({
-    selector: 'app-detail-product',
-    templateUrl: './detail-product.component.html',
-    styleUrls: ['./detail-product.component.scss'],
-    imports: [
-        FooterComponent,
-        HeaderComponent,
-        CommonModule,
-        NgbModule
-    ]
+  selector: 'app-detail-product',
+  templateUrl: './detail-product.component.html',
+  styleUrls: ['./detail-product.component.scss'],
+  imports: [
+    FooterComponent,
+    HeaderComponent,
+    CommonModule,
+    NgbModule
+  ]
 })
 
 export class DetailProductComponent extends BaseComponent implements OnInit {
@@ -27,11 +27,12 @@ export class DetailProductComponent extends BaseComponent implements OnInit {
   productId: number = 0;
   currentImageIndex: number = 0;
   quantity: number = 1;
-  isPressedAddToCart: boolean = false;  
+  isPressedAddToCart: boolean = false;
+
   ngOnInit() {
-    // Lấy productId từ URL      
+    // Lấy productId từ URL
     const idParam = this.activatedRoute.snapshot.paramMap.get('id');
-    
+
     //this.cartService.clearCart();
     //const idParam = 9 //fake tạm 1 giá trị
     if (idParam !== null) {
@@ -42,13 +43,13 @@ export class DetailProductComponent extends BaseComponent implements OnInit {
         next: (apiResponse: ApiResponse) => {
           // Lấy danh sách ảnh sản phẩm và thay đổi URL
           const response = apiResponse.data
-          
+
           if (response.product_images && response.product_images.length > 0) {
             response.product_images.forEach((product_image: ProductImage) => {
               product_image.image_url = `${environment.apiBaseUrl}/products/images/${product_image.image_url}`;
             });
           }
-          
+
           this.product = response
           // Bắt đầu với ảnh đầu tiên
           this.showImage(0);
@@ -72,11 +73,12 @@ export class DetailProductComponent extends BaseComponent implements OnInit {
       });
     }
   }
+
   showImage(index: number): void {
-    
+
     if (this.product && this.product.product_images &&
       this.product.product_images.length > 0) {
-      // Đảm bảo index nằm trong khoảng hợp lệ        
+      // Đảm bảo index nằm trong khoảng hợp lệ
       if (index < 0) {
         index = 0;
       } else if (index >= this.product.product_images.length) {
@@ -86,22 +88,24 @@ export class DetailProductComponent extends BaseComponent implements OnInit {
       this.currentImageIndex = index;
     }
   }
+
   thumbnailClick(index: number) {
-    
+
     // Gọi khi một thumbnail được bấm
     this.currentImageIndex = index; // Cập nhật currentImageIndex
   }
+
   nextImage(): void {
-    
+
     this.showImage(this.currentImageIndex + 1);
   }
 
   previousImage(): void {
-    
+
     this.showImage(this.currentImageIndex - 1);
   }
+
   addToCart(): void {
-    
     this.isPressedAddToCart = true;
     if (this.product) {
       this.cartService.addToCart(this.product.id, this.quantity);
@@ -112,7 +116,6 @@ export class DetailProductComponent extends BaseComponent implements OnInit {
   }
 
   increaseQuantity(): void {
-    
     this.quantity++;
   }
 
@@ -121,12 +124,14 @@ export class DetailProductComponent extends BaseComponent implements OnInit {
       this.quantity--;
     }
   }
+
   getTotalPrice(): number {
     if (this.product) {
       return this.product.price * this.quantity;
     }
     return 0;
   }
+
   buyNow(): void {
     if (this.isPressedAddToCart == false) {
       this.addToCart();

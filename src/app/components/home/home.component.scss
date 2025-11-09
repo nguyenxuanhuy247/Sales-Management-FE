@@ -28,6 +28,11 @@
 .form-control {
     background-color: transparent;
     color: white;
+
+  .option {
+    background-color: white;
+    color: black;
+  }
 }
 
 .form-control::placeholder {
@@ -108,9 +113,8 @@
 }
 .btn-primary {
     background-color: $shopapp-color;
-    border-color: $shopapp-color;    
+    border-color: $shopapp-color;
 }
 .btn.btn-primary {
     margin-left: 10px;
 }
-  
