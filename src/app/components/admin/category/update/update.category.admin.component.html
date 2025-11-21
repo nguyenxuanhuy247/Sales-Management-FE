@@ -4,15 +4,18 @@
     <div class="container">
       <div class="row">
         <div class="col-md-6 offset-md-3">
-          <h3>Update Category</h3>
+          <h3>Cập nhật danh mục</h3>
           <form (ngSubmit)="updateCategory()">
             <div class="form-group mb-3">
-              <label for="name">Name:</label>
+              <label for="name">Nhập tên danh mục</label>
               <input type="text" id="name" 
                 [(ngModel)]="updatedCategory.name" 
                 name="name" class="form-control" required>
             </div>                  
-            <button type="submit" class="btn btn-primary">Update</button>
+            <div class="col-12 gap-4 d-flex justify-content-end">
+              <button type="button" class="btn btn-danger" (click)="onBack()">Quay lại</button>
+              <button type="submit" class="btn btn-primary">Lưu</button>
+            </div>
           </form>
         </div>
       </div>

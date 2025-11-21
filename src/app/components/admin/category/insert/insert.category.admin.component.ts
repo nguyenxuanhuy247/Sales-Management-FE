@@ -27,6 +27,10 @@ export class InsertCategoryAdminComponent extends BaseComponent implements OnIni
     
   }   
 
+  onBack() {
+    this.router.navigate(['/admin/categories']);
+  }
+
   insertCategory() {    
     this.categoryService.insertCategory(this.insertCategoryDTO).subscribe({
       next: (response) => {

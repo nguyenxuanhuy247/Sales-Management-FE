@@ -1,176 +1,129 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../../../models/product';
-import { Category } from '../../../../models/category';
-import { environment } from '../../../../../environments/environment';
-import { ProductImage } from '../../../../models/product.image';
-import { UpdateProductDTO } from '../../../../dtos/product/update.product.dto';
+import { environment } from '../../../../environments/environment';
+import { Product } from '../../../models/product';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ApiResponse } from '../../../../responses/api.response';
+import { ApiResponse } from '../../../responses/api.response';
 import { HttpErrorResponse } from '@angular/common/http';
-import { BaseComponent } from '../../../base/base.component';
+import { BaseComponent } from '../../base/base.component';
+
 
 @Component({
-    selector: 'app-detail.product.admin',
-    templateUrl: './update.product.admin.component.html',
-    styleUrls: ['./update.product.admin.component.scss'],
+    selector: 'app-product-admin',
+    templateUrl: './product.admin.component.html',
+    styleUrls: [
+        './product.admin.component.scss',
+    ],
     imports: [
         CommonModule,
         FormsModule,
     ]
 })
-
-export class UpdateProductAdminComponent extends BaseComponent implements OnInit {  
-  categories: Category[] = []; // Dữ liệu động từ categoryService
-  currentImageIndex: number = 0;
-  images: File[] = [];
-  productId: number = 0;
-  product: Product = {} as Product;
-  updatedProduct: Product = {} as Product;
-
-  ngOnInit(): void {
-    this.activatedRoute.paramMap.subscribe(params => {
-      this.productId = Number(params.get('id'));
-      this.getProductDetails();
-    });
-    this.getCategories(1, 100);
-  }
-  getCategories(page: number, limit: number) {
-    this.categoryService.getCategories(page, limit).subscribe({
-      next: (apiResponse: ApiResponse) => {
-        ;
-        this.categories = apiResponse.data;
-      },
-      complete: () => {
-        ;
-      },
-      error: (error: HttpErrorResponse) => {
-        this.toastService.showToast({
-          error: error,
-          defaultMsg: 'Lỗi tải danh mục',
-          title: 'Lỗi Tải Dữ Liệu'
-        });
-      }
-    });
-  }
-  getProductDetails(): void {
-    this.productService.getDetailProduct(this.productId).subscribe({
-      next: (apiResponse: ApiResponse) => {
-
-        this.product = apiResponse.data;
-        this.updatedProduct = { ...apiResponse.data };                
-        this.updatedProduct.product_images.forEach((product_image:ProductImage) => {
-          product_image.image_url = `${environment.apiBaseUrl}/products/images/${product_image.image_url}`;
-        });
-      },
-      complete: () => {
+export class ProductAdminComponent extends BaseComponent implements OnInit {
+    selectedCategoryId: number  = 0; // Giá trị category được chọn
+    products: Product[] = [];        
+    currentPage: number = 0;
+    itemsPerPage: number = 12;
+    pages: number[] = [];
+    totalPages:number = 0;
+    visiblePages: number[] = [];
+    keyword:string = "";
+    localStorage?:Storage;
         
-      },
-      error: (error: HttpErrorResponse) => {
-        this.toastService.showToast({
-          error: error,
-          defaultMsg: 'Lỗi tải chi tiết sản phẩm',
-          title: 'Lỗi Hệ Thống'
-        });
-      }
-    });     
-  }
-  updateProduct() {
-    // Implement your update logic here
-    const updateProductDTO: UpdateProductDTO = {
-      name: this.updatedProduct.name,
-      price: this.updatedProduct.price,
-      description: this.updatedProduct.description,
-      category_id: this.updatedProduct.category_id
-    };
-    this.productService.updateProduct(this.product.id, updateProductDTO).subscribe({
-      next: (apiResponse: ApiResponse) => {  
-                
-      },
-      complete: () => {
-        ;
-        this.router.navigate(['/admin/products']);        
-      },
-      error: (error: HttpErrorResponse) => {
-        this.toastService.showToast({
-          error: error,
-          defaultMsg: 'Lỗi cập nhật sản phẩm',
-          title: 'Lỗi Cập Nhật'
-        });
-      }
-    });  
-  }
-  showImage(index: number): void {
-    
-    if (this.product && this.product.product_images && 
-        this.product.product_images.length > 0) {
-      // Đảm bảo index nằm trong khoảng hợp lệ        
-      if (index < 0) {
-        index = 0;
-      } else if (index >= this.product.product_images.length) {
-        index = this.product.product_images.length - 1;
-      }        
-      // Gán index hiện tại và cập nhật ảnh hiển thị
-      this.currentImageIndex = index;
+    constructor() {
+      super();
+      this.localStorage = document.defaultView?.localStorage;
     }
-  }
-  thumbnailClick(index: number) {
-    
-    // Gọi khi một thumbnail được bấm
-    this.currentImageIndex = index; // Cập nhật currentImageIndex
-  }  
-  nextImage(): void {
-    
-    this.showImage(this.currentImageIndex + 1);
-  }
 
-  previousImage(): void {
     
-    this.showImage(this.currentImageIndex - 1);
-  }  
-  onFileChange(event: any) {
-    // Retrieve selected files from input element
-    const files = event.target.files;
-    // Limit the number of selected files to 5
-    if (files.length > 5) {
-      console.error('Please select a maximum of 5 images.');
-      return;
+    ngOnInit() {
+      this.currentPage = Number(this.localStorage?.getItem('currentProductAdminPage')) || 0; 
+      this.getProducts(this.keyword, 
+        this.selectedCategoryId, 
+        this.currentPage, this.itemsPerPage);      
+    }    
+    searchProducts() {
+      this.currentPage = 0;
+      this.itemsPerPage = 12;
+      
+      this.getProducts(this.keyword.trim(), this.selectedCategoryId, this.currentPage, this.itemsPerPage);
     }
-    // Store the selected files in the newProduct object
-    this.images = files;
-    this.productService.uploadImages(this.productId, this.images).subscribe({
-      next: (apiResponse: ApiResponse) => {
-        
-        // Handle the uploaded images response if needed              
-        console.log('Images uploaded successfully:', apiResponse);
-        this.images = [];       
-        // Reload product details to reflect the new images
-        this.getProductDetails(); 
-      },
-      error: (error: HttpErrorResponse) => {
-        this.toastService.showToast({
-          error: error,
-          defaultMsg: 'Lỗi upload ảnh sản phẩm',
-          title: 'Lỗi Upload'
-        });
-      }
-    })
-  }
-  deleteImage(productImage: ProductImage) {
-    if (confirm('Are you sure you want to remove this image?')) {
-      // Call the removeImage() method to remove the image   
-      this.productService.deleteProductImage(productImage.id).subscribe({
-        next:(productImage: ProductImage) => {
-          location.reload();          
-        },        
+    getProducts(keyword: string, selectedCategoryId: number, page: number, limit: number) {
+      
+      this.productService.getProducts(keyword, selectedCategoryId, page, limit).subscribe({
+        next: (apiresponse: ApiResponse) => {
+          
+          const response = apiresponse.data;
+          response.products.forEach((product: Product) => {                      
+            if (product) {
+              product.url = `${environment.apiBaseUrl}/products/images/${product.thumbnail}`;
+            }          
+          });
+          this.products = response.products;
+          this.totalPages = response.totalPages;
+          this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
+        },
+        complete: () => {
+          ;
+        },
         error: (error: HttpErrorResponse) => {
           this.toastService.showToast({
             error: error,
-            defaultMsg: 'Lỗi xóa ảnh sản phẩm',
-            title: 'Lỗi Xóa'
+            defaultMsg: 'Lỗi tải danh sách sản phẩm',
+            title: 'Lỗi Tải Dữ Liệu'
           });
         }
-      });
-    }   
+      });    
+    }
+    onPageChange(page: number) {
+      ;
+      this.currentPage = page < 0 ? 0 : page;
+      this.localStorage?.setItem('currentProductAdminPage', String(this.currentPage));     
+      this.getProducts(this.keyword, this.selectedCategoryId, this.currentPage, this.itemsPerPage);
+    }      
+    
+    // Hàm xử lý sự kiện khi thêm mới sản phẩm
+    insertProduct() {
+      
+      // Điều hướng đến trang detail-product với productId là tham số
+      this.router.navigate(['/admin/products/insert']);
+    } 
+
+    // Hàm xử lý sự kiện khi sản phẩm được bấm vào
+    updateProduct(productId: number) {
+      
+      // Điều hướng đến trang detail-product với productId là tham số
+      this.router.navigate(['/admin/products/update', productId]);
+    }  
+    deleteProduct(product: Product) {      
+      const confirmation = window.confirm('Are you sure you want to delete this product?');
+      if (confirmation) {
+        
+        this.productService.deleteProduct(product.id).subscribe({
+          next: (apiResponse: ApiResponse) => {
+            this.toastService.showToast({
+              error: null,
+              defaultMsg: 'Xóa sản phẩm thành công',
+              title: 'Thành Công'
+            });
+            location.reload();          
+          },
+          complete: () => {
+            ;          
+          },
+          error: (error: HttpErrorResponse) => {
+            this.toastService.showToast({
+              error: error,
+              defaultMsg: 'Lỗi khi xóa sản phẩm',
+              title: 'Lỗi Xóa'
+            });
+          }
+        });  
+      }      
+    }      
+
+  buyNow(productId: number): void {
+      this.cartService.addToCart(productId, 1);
+    this.router.navigate(['/orders']);
   }
 }

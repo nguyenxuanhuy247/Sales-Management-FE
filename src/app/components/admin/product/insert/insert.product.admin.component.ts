@@ -56,6 +56,10 @@ export class InsertProductAdminComponent extends BaseComponent implements OnInit
     this.insertProductDTO.images = files;
   }
 
+  onBack() {
+    this.router.navigate(['/admin/products']);
+  }
+
   insertProduct() {    
     this.productService.insertProduct(this.insertProductDTO).subscribe({
       next: (apiResponse: ApiResponse) => {

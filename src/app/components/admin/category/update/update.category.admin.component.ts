@@ -46,6 +46,11 @@ export class UpdateCategoryAdminComponent extends BaseComponent implements OnIni
       }      
     });     
   }
+
+  onBack() {
+    this.router.navigate(['/admin/categories']);
+  }
+
   updateCategory() {
     // Implement your update logic here
     const updateCategoryDTO: UpdateCategoryDTO = {

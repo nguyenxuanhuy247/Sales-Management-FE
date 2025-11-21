@@ -14,7 +14,7 @@ import {AuthCallbackComponent} from './components/auth-callback/auth-callback.co
 import {PaymentCallbackComponent} from './payment-callback/payment-callback.component';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent },  
   { path: 'auth/google/callback', component: AuthCallbackComponent },
   { path: 'auth/facebook/callback', component: AuthCallbackComponent },

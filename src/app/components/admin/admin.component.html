@@ -1,8 +1,8 @@
 <div class="container-fluid">
     <header class="header bg-success text-white d-flex justify-content-between">
-      <h1 class="header-title">Dashboard Header</h1>
+      <h1 class="header-title">Quản lý bán hàng</h1>
       <!-- Logout Button -->
-      <button class="btn btn-danger btn-sm" (click)="logout()">Logout</button>
+      <button class="btn btn-danger btn-sm" (click)="logout()">Đăng xuất</button>
     </header>
     <div class="row">
       <nav id="sidebar" class="col-md-2 col-lg-2 d-md-block bg-light sidebar">
@@ -13,7 +13,7 @@
                 (click)="showAdminComponent('orders')"
                 routerLink="/admin/orders"
                 routerLinkActive="active">
-                <i class="fab fa-first-order icon"></i>Orders
+                <i class="fab fa-first-order icon"></i>Đơn hàng
               </a>
             </li>
             <li class="nav-item">
@@ -21,7 +21,7 @@
                 (click)="showAdminComponent('categories')"
                   routerLink="/admin/categories"
                   routerLinkActive="active">
-                <i class="fab fa-canadian-maple-leaf icon"></i>Categories
+                <i class="fab fa-canadian-maple-leaf icon"></i>Danh mục
               </a>
             </li>
             <li class="nav-item">
@@ -29,7 +29,7 @@
                 (click)="showAdminComponent('products')"
                 routerLink="/admin/products"
                 routerLinkActive="active">
-                <i class="fab fa-codepen icon"></i>Products
+                <i class="fab fa-codepen icon"></i>Sản phẩm
               </a>
             </li>
             <li class="nav-item">
@@ -37,7 +37,7 @@
                 (click)="showAdminComponent('users')"
                 routerLink="/admin/users"
                 routerLinkActive="active">
-                <i class="fab fa-codepen icon"></i>Users
+                <i class="fab fa-codepen icon"></i>Người dùng
               </a>
             </li>
           </ul>

@@ -11,6 +11,7 @@ import { InsertProductAdminComponent } from "./product/insert/insert.product.adm
 import { InsertCategoryAdminComponent } from "./category/insert/insert.category.admin.component";
 import { UpdateCategoryAdminComponent } from "./category/update/update.category.admin.component";
 import { UserAdminComponent } from "./user/user.admin.component";
+import { OrderDetailComponent } from "../detail-order/order.detail.component";
 
 export const adminRoutes: Routes = [
     {
@@ -20,6 +21,10 @@ export const adminRoutes: Routes = [
             {
                 path: 'orders',
                 component: OrderAdminComponent
+            },            
+            {
+                path: 'create/orders',
+                component: OrderDetailComponent
             },            
             {
                 path: 'products',
