@@ -1,38 +1,31 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Product } from '../../models/product';
-import { environment } from '../../../environments/environment';
-import { OrderDTO } from '../../dtos/order/order.dto';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ApiResponse } from '../../responses/api.response';
-import { HttpErrorResponse } from '@angular/common/http';
-import { BaseComponent } from '../base/base.component';
+import {Component, inject, OnInit} from '@angular/core';
+import {Product} from '../../models/product';
+import {environment} from '../../../environments/environment';
+import {OrderDTO} from '../../dtos/order/order.dto';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FooterComponent} from '../footer/footer.component';
+import {CommonModule} from '@angular/common';
+import {ApiResponse} from '../../responses/api.response';
+import {HttpErrorResponse} from '@angular/common/http';
+import {BaseComponent} from '../base/base.component';
 
 @Component({
-    selector: 'app-order',
-    templateUrl: './order.component.html',
-    styleUrls: ['./order.component.scss'],
-    imports: [
-        FooterComponent,
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-    ]
+  selector: 'app-order',
+  templateUrl: './order.component.html',
+  styleUrls: ['./order.component.scss'],
+  imports: [
+    FooterComponent,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ]
 })
 export class OrderComponent extends BaseComponent implements OnInit {
-  private formBuilder = inject(FormBuilder);
-
   orderForm: FormGroup;
   cartItems: { product: Product, quantity: number }[] = [];
   totalAmount: number = 0;
   couponDiscount: number = 0;
-  couponApplied: boolean = false;
   cart: Map<number, number> = new Map();
-
   // Mặc định payment_method = 'vnpay'
   orderData: OrderDTO = {
     user_id: 0,
@@ -45,6 +38,7 @@ export class OrderComponent extends BaseComponent implements OnInit {
     total_money: 0,
     cart_items: []
   };
+  private formBuilder = inject(FormBuilder);
 
   constructor() {
     super();
@@ -61,13 +55,13 @@ export class OrderComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     // Lấy userId
     this.orderData.user_id = this.tokenService.getUserId();
-    this.orderForm.patchValue({...this.orderData,});    
+    this.orderForm.patchValue({...this.orderData,});
 
     // Lấy giỏ hàng
     this.cart = this.cartService.getCart();
     const productIds = Array.from(this.cart.keys());
 
-    if(productIds.length === 0) {
+    if (productIds.length === 0) {
       return;
     }
 
@@ -102,7 +96,7 @@ export class OrderComponent extends BaseComponent implements OnInit {
 
   // Khi bấm nút "Đặt hàng"
   placeOrder() {
-    
+
     if (this.orderForm.valid && this.cartItems.length > 0) {
       // Gán giá trị form vào orderData
       this.orderData = {
@@ -117,19 +111,19 @@ export class OrderComponent extends BaseComponent implements OnInit {
       this.orderData.total_money = this.totalAmount;
 
 
-        this.orderService.placeOrder(this.orderData).subscribe({
-          next: (response: ApiResponse) => {
-            this.cartService.clearCart();
-            this.router.navigate(['/admin/orders']);
-          },
-          error: (err: HttpErrorResponse) => {
-            this.toastService.showToast({
-              error: err,
-              defaultMsg: 'Lỗi trong quá trình đặt hàng',
-              title: 'Lỗi Đặt Hàng'
-            });
-          }
-        });
+      this.orderService.placeOrder(this.orderData).subscribe({
+        next: (response: ApiResponse) => {
+          this.cartService.clearCart();
+          this.router.navigate(['/admin/orders']);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.toastService.showToast({
+            error: err,
+            defaultMsg: 'Lỗi trong quá trình đặt hàng',
+            title: 'Lỗi Đặt Hàng'
+          });
+        }
+      });
 
     } else {
       this.toastService.showToast({
@@ -172,17 +166,16 @@ export class OrderComponent extends BaseComponent implements OnInit {
     }
   }
 
+  onBack() {
+    this.router.navigate(['/admin/products']);
+  }
+
   private updateCartFromCartItems(): void {
     this.cart.clear();
     this.cartItems.forEach(item => {
       this.cart.set(item.product.id, item.quantity);
     });
     this.cartService.setCart(this.cart);
-  }
-
-  
-  onBack() {
-    this.router.navigate(['/admin/products']);
   }
 
 }

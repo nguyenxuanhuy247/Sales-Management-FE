@@ -1,42 +1,50 @@
 <h1 class="my-4">Danh sách người dùng</h1>
 <table class="table table-striped">
-    <thead>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Họ và tên</th>
+    <th>Số điện thoại</th>
+    <th>Địa chỉ</th>
+    <th>Trạng thái</th>
+    <th>Vai trò</th>
+    <th>Thao tác</th>
+  </tr>
+  </thead>
+  <tbody>
+    @for (user of users; track user.id) {
       <tr>
-        <th>ID</th>
-        <th>Họ và tên</th>
-        <th>Số điện thoại</th>
-        <th>Địa chỉ</th>
-        <th>Trạng thái</th>
-        <th>Vai trò</th>
-        <th>Thao tác</th>
-      </tr>
-    </thead>
-    <tbody>
-        @for(user of users; track user.id) {
-        <tr>
-            <td>{{ user.id }}</td>
-            <td>{{ user.fullname }}</td>
-            <td>{{ user.phone_number }}</td>
-            <td>{{ user.address }}</td>
-            <td>{{ user.is_active ? 'Hoạt động' : 'Không hoạt động' }}</td>
-            <td>{{ user.role.name }}</td>
-            <td>
-                <button class="btn" [ngClass]="{
+        <td>{{ user.id }}</td>
+        <td>{{ user.fullname }}</td>
+        <td>{{ user.phone_number }}</td>
+        <td>{{ user.address }}</td>
+        <td>{{ user.is_active ? 'Hoạt động' : 'Không hoạt động' }}</td>
+        <td>{{ user.role.name }}</td>
+        <td>
+          <button
+            class="btn"
+            [ngClass]="{
                         'btn-danger': user.is_active,
                         'btn-success': !user.is_active
-                      }" (click)="toggleUserStatus(user)">
-                    {{ user.is_active ? 'Khóa' : 'Mở khóa' }}
-                </button>
-                <button 
-                  class="btn btn-secondary ms-2" 
-                  (click)="updateUser(user.id)">
-                    Cập nhật
-                </button>
-                <button class="btn btn-primary ms-2" (click)="resetPassword(user.id)">
-                    Reset mật khẩu
-                </button>
-            </td>
-        </tr>
-        }
-    </tbody>
-  </table>
+                      }"
+            (click)="toggleUserStatus(user)"
+          >
+            {{ user.is_active ? 'Khóa' : 'Mở khóa' }}
+          </button>
+          <button
+            class="btn btn-secondary ms-2"
+            (click)="updateUser(user.id)"
+          >
+            Cập nhật
+          </button>
+          <button
+            class="btn btn-primary ms-2"
+            (click)="resetPassword(user.id)"
+          >
+            Reset mật khẩu
+          </button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

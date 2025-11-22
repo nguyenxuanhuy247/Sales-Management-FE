@@ -33,8 +33,6 @@ export class DetailProductComponent extends BaseComponent implements OnInit {
     // Lấy productId từ URL
     const idParam = this.activatedRoute.snapshot.paramMap.get('id');
 
-    //this.cartService.clearCart();
-    //const idParam = 9 //fake tạm 1 giá trị
     if (idParam !== null) {
       this.productId = +idParam;
     }
@@ -53,9 +51,6 @@ export class DetailProductComponent extends BaseComponent implements OnInit {
           this.product = response
           // Bắt đầu với ảnh đầu tiên
           this.showImage(0);
-        },
-        complete: () => {
-          ;
         },
         error: (error: HttpErrorResponse) => {
           this.toastService.showToast({
@@ -90,18 +85,15 @@ export class DetailProductComponent extends BaseComponent implements OnInit {
   }
 
   thumbnailClick(index: number) {
-
     // Gọi khi một thumbnail được bấm
     this.currentImageIndex = index; // Cập nhật currentImageIndex
   }
 
   nextImage(): void {
-
     this.showImage(this.currentImageIndex + 1);
   }
 
   previousImage(): void {
-
     this.showImage(this.currentImageIndex - 1);
   }
 

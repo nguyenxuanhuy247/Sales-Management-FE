@@ -1,20 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { UserResponse } from '../../responses/user/user.response';
-import { CommonModule } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { RouterModule } from '@angular/router';  
-import { BaseComponent } from '../base/base.component';
+import {Component, OnInit} from '@angular/core';
+import {UserResponse} from '../../responses/user/user.response';
+import {CommonModule} from '@angular/common';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {RouterModule} from '@angular/router';
+import {BaseComponent} from '../base/base.component';
 
 @Component({
-    selector: 'app-header',
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss'],
-    standalone: true,
-    imports: [
-        CommonModule,
-        NgbModule,
-        RouterModule
-    ]
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    NgbModule,
+    RouterModule
+  ]
 })
 export class HeaderComponent extends BaseComponent implements OnInit {
   userResponse?: UserResponse | null;
@@ -31,9 +31,8 @@ export class HeaderComponent extends BaseComponent implements OnInit {
   }
 
   handleItemClick(index: number): void {
-    //console.error(`Clicked on "${index}"`);
     if (index === 0) {
-      
+
       this.router.navigate(['/user-profile']);
     } else if (index === 2) {
       this.userService.removeUserFromLocalStorage();
@@ -45,6 +44,5 @@ export class HeaderComponent extends BaseComponent implements OnInit {
 
   setActiveNavItem(index: number) {
     this.activeNavItem = index;
-    //console.error(this.activeNavItem);
   }
 }

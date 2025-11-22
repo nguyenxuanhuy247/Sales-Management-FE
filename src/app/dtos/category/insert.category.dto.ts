@@ -1,15 +1,11 @@
-import {
-    IsString, 
-    IsNotEmpty, 
-    IsPhoneNumber,     
-} from 'class-validator';
+import {IsNotEmpty, IsString,} from 'class-validator';
 
-export class InsertCategoryDTO {    
-    @IsString()
-    @IsNotEmpty()
-    name: string;
-            
-    constructor(data: any) {
-        this.name = data.name;    
-    }
+export class InsertCategoryDTO {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  constructor(data: any) {
+    this.name = data.name;
+  }
 }

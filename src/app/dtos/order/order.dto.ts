@@ -1,13 +1,3 @@
-import { IsString, 
-  IsNotEmpty, 
-  IsPhoneNumber, 
-  IsNumber, ArrayMinSize, 
-  ValidateNested, 
-  Length 
-} from 'class-validator';
-import { Type } from 'class-transformer';
-import { CartItemDTO } from './cart.item.dto';
-
 export class OrderDTO {
   user_id: number;
 
@@ -16,18 +6,17 @@ export class OrderDTO {
   email: string;
 
   phone_number: string;
-  
+
   address: string;
-  
+
   status: string;
 
   note: string;
-  
+
   total_money?: number;
 
   order_date?: Date;
   cart_items: { product_id: number, quantity: number }[]; // Thêm cart_items để lưu thông tin giỏ hàng
-
 
   constructor(data: any) {
     this.user_id = data.user_id;

@@ -5,9 +5,10 @@ import { Injectable } from '@angular/core';
 })
 export class ToastService {
 
-  constructor() { }
+  constructor() {
+  }
 
-  showToast({ error, defaultMsg: defaultMessage, title = '', delay = 5000 }: {
+  showToast({error, defaultMsg: defaultMessage, title = '', delay = 5000}: {
     error?: any,
     defaultMsg: string,
     title?: string,
@@ -16,7 +17,7 @@ export class ToastService {
     // Xác định message và màu sắc
     let message = defaultMessage;
     let toastClass = 'bg-danger'; // Mặc định cho lỗi
-    
+
     if (!error) {
       toastClass = 'bg-success'; // Thành công
     }
