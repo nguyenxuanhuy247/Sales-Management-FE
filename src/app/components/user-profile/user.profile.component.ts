@@ -25,7 +25,6 @@ import {BaseComponent} from '../base/base.component';
   styleUrls: ['./user.profile.component.scss'],
   imports: [
     FooterComponent,
-    HeaderComponent,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -65,7 +64,8 @@ export class UserProfileComponent extends BaseComponent implements OnInit, OnDes
     document.addEventListener('visibilitychange', this.handleVisibility);
 
     this.token = this.tokenService.getToken();
-    this.userService.getUserDetail(this.token).subscribe({
+    const id = +(this.activatedRoute.snapshot.paramMap.get('id') || 0);
+    this.userService.getUserDetailById(id).subscribe({
       next: (response: any) => {
         this.userResponse = {
           ...response.data,
@@ -102,8 +102,11 @@ export class UserProfileComponent extends BaseComponent implements OnInit, OnDes
     };
   }
 
-  save(): void {
+  onBack() {
+    this.router.navigate(['/admin/users']);
+  }
 
+  save(): void {
     if (this.userProfileForm.valid) {
       const updateUserDTO: UpdateUserDTO = {
         fullname: this.userProfileForm.get('fullname')?.value,
@@ -116,12 +119,9 @@ export class UserProfileComponent extends BaseComponent implements OnInit, OnDes
       this.userService.updateUserDetail(this.token, updateUserDTO)
         .subscribe({
           next: (response: any) => {
-            this.userService.removeUserFromLocalStorage();
-            this.tokenService.removeToken();
-            this.router.navigate(['/login']);
+            this.router.navigate(['/admin/users']);
           },
           error: (error: HttpErrorResponse) => {
-            ;
             console.error(error?.error?.message ?? '');
           }
         });

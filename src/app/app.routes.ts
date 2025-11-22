@@ -1,5 +1,4 @@
 import {Routes} from '@angular/router';
-import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
 import {RegisterComponent} from './components/register/register.component';
 import {DetailProductComponent} from './components/detail-product/detail-product.component';
@@ -10,8 +9,6 @@ import {AdminComponent} from './components/admin/admin.component';
 import {AuthGuardFn} from './guards/auth.guard';
 import {AdminGuardFn} from './guards/admin.guard';
 import {AuthCallbackComponent} from './components/auth-callback/auth-callback.component';
-//import { OrderAdminComponent } from './components/admin/order/order.admin.component';
-import {PaymentCallbackComponent} from './payment-callback/payment-callback.component';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -21,7 +18,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'products/:id', component: DetailProductComponent },  
   { path: 'orders', component: OrderComponent, canActivate:[AuthGuardFn] },
-  { path: 'user-profile', component: UserProfileComponent, canActivate:[AuthGuardFn] },
+  { path: 'user-profile/:id', component: UserProfileComponent, canActivate:[AuthGuardFn] },
   { path: 'orders/:id', component: OrderDetailComponent },
   //Admin   
   { 
@@ -29,6 +26,4 @@ export const routes: Routes = [
     component: AdminComponent, 
     canActivate:[AdminGuardFn] 
   },      
-  // Thêm route mới cho VnPay Return
-  { path: 'payments/payment-callback', component: PaymentCallbackComponent }
 ];

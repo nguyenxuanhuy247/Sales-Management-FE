@@ -41,17 +41,7 @@ export class UserService {
   login(loginDTO: LoginDTO): Observable<ApiResponse> {    
     return this.http.post<ApiResponse>(this.apiLogin, loginDTO, this.apiConfig);
   }
-  /*
-  getUserDetail(token: string): Observable<ApiResponse> {
-    
-    return this.http.post<ApiResponse>(this.apiUserDetail, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      })
-    })
-  }
-  */
+  
   getUserDetail(token: string): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(this.apiUserDetail, null, {
       headers: new HttpHeaders({
@@ -59,6 +49,10 @@ export class UserService {
         Authorization: `Bearer ${token}`
       })
     });
+  }
+    
+  getUserDetailById(userId: number): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(`${environment.apiBaseUrl}/users/details/${userId}`);
   }
   
   updateUserDetail(token: string, updateUserDTO: UpdateUserDTO): Observable<ApiResponse>  {

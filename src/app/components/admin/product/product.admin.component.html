@@ -1,6 +1,5 @@
 <div class="container">
-    <h1>Product Admin</h1>
-    <!--Đoạn này có 1 ô searchbox bên trái, 1 combobox bên phải  -->
+    <h1>Danh sách sản phẩm</h1>
     <div class="row mb-3">
       <div class="col-md-8">
         <input type="text" class="form-control search-input" placeholder="Tìm sản phẩm" [(ngModel)]="keyword">
@@ -10,7 +9,14 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-8 ">
+      <div class="d-flex justify-content-end gap-4">
+        <span class="d-flex align-items-center fs-5 fw-semibold">Đã chọn 
+
+            {{ cartService.getCart().size }}  sản phẩm</span>
+        <button class="btn btn-danger" (click)="buyNow()">        
+          <i class="fas fa-shopping-cart icon"></i>
+              Giỏ hàng
+            </button>
         <button class="btn btn-success" (click)="insertProduct()">Thêm sản phẩm mới</button>
       </div>      
     </div>
@@ -19,11 +25,11 @@
       <thead class="table-light">
         <tr>
           <th>ID</th>
-          <th>Name</th>
-          <th>Price</th>
-          <th>Thumbnail</th>
-          <th>Description</th>
-          <th>Actions</th>
+          <th>Tên sản phẩm</th>
+          <th>Giá</th>
+          <th>Ảnh</th>
+          <th>Mô tả</th>
+          <th>Thao tác</th>
         </tr>
       </thead>
       <tbody>        
@@ -40,12 +46,18 @@
             <td>{{ product.description }}</td>
             <td>
               <div style="display: flex; gap: 10px;">
+                       <button
+            class="btn btn-primary"
+            (click)="addToCart(product.id)"
+          >
+            Thêm vào giỏ hàng
+          </button>
                 <button class="btn btn-primary" 
                     (click)="updateProduct(product.id)">
-                  Update
+                  Cập nhật
                 </button>
                 <button class="btn btn-danger" 
-                  (click)="deleteProduct(product)">Delete
+                  (click)="deleteProduct(product)">Xóa
                 </button>            
                 </div>
             </td>          

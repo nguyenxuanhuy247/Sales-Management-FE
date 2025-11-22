@@ -18,7 +18,6 @@ import { BaseComponent } from '../base/base.component';
     styleUrls: ['./order.component.scss'],
     imports: [
         FooterComponent,
-        HeaderComponent,
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
@@ -44,26 +43,18 @@ export class OrderComponent extends BaseComponent implements OnInit {
     status: 'pending',
     note: '',
     total_money: 0,
-    payment_method: 'vnpay', // Đặt mặc định là thanh toán bằng VNPAY
-    shipping_method: 'express',
-    coupon_code: '',
     cart_items: []
   };
 
   constructor() {
     super();
     // Tạo FormGroup
-    
     this.orderForm = this.formBuilder.group({
       fullname: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phone_number: ['', [Validators.required, Validators.minLength(6)]],
       address: ['', [Validators.required, Validators.minLength(5)]],
       note: ['', Validators.required],
-      couponCode: [''],
-      shipping_method: ['express'],
-      // Mặc định là 'vnpay'
-      payment_method: ['vnpay']
     });
   }
 
@@ -112,7 +103,7 @@ export class OrderComponent extends BaseComponent implements OnInit {
   // Khi bấm nút "Đặt hàng"
   placeOrder() {
     
-    if (this.orderForm.valid) {
+    if (this.orderForm.valid && this.cartItems.length > 0) {
       // Gán giá trị form vào orderData
       this.orderData = {
         ...this.orderData,
@@ -125,64 +116,13 @@ export class OrderComponent extends BaseComponent implements OnInit {
       }));
       this.orderData.total_money = this.totalAmount;
 
-      // Kiểm tra: Nếu payment_method = 'vnpay' => Gọi createPaymentUrl, 
-      // ngược lại => placeOrder
-      if (this.orderData.payment_method === 'vnpay') {
-        
-        const amount = this.orderData.total_money || 0;
-      
-        // Bước 1: Gọi API tạo link thanh toán
-        this.paymentService.createPaymentUrl({ amount, language: 'vn' })
-          .subscribe({
-            next: (res: ApiResponse) => {
-              // res.data là URL thanh toán, ví dụ:
-              // https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_Amount=49800&...&vnp_TxnRef=18425732&...
-              const paymentUrl = res.data;
-              console.log('URL thanh toán:', paymentUrl);              
-              // Bước 2: Tách vnp_TxnRef từ URL vừa trả về
-              const vnp_TxnRef = new URL(paymentUrl).searchParams.get('vnp_TxnRef') || '';
-      
-              // Bước 3: Gọi placeOrder kèm theo vnp_TxnRef
-              this.orderService.placeOrder({
-                ...this.orderData,
-                vnp_txn_ref: vnp_TxnRef
-              }).subscribe({
-                next: (placeOrderResponse: ApiResponse) => {
-                  // Bước 4: Nếu đặt hàng thành công, điều hướng sang trang thanh toán VNPAY
-                  
-                  window.location.href = paymentUrl;
-                },
-                error: (err: HttpErrorResponse) => {
-                  
-                  this.toastService.showToast({
-                    error: err,
-                    defaultMsg: 'Lỗi trong quá trình đặt hàng',
-                    title: 'Lỗi Đặt Hàng'
-                  });
-                }
-              });
-            },
-            error: (err: HttpErrorResponse) => {
-              this.toastService.showToast({
-                error: err,
-                defaultMsg: 'Lỗi kết nối đến cổng thanh toán',
-                title: 'Lỗi Thanh Toán'
-              });
-            }
-          });
-      } else {
-        
-        // Chọn COD => Gọi this.orderService.placeOrder
+
         this.orderService.placeOrder(this.orderData).subscribe({
           next: (response: ApiResponse) => {
-            
-            console.log('Đặt hàng COD thành công!', response);
-            // Xoá giỏ hàng, về trang chủ
             this.cartService.clearCart();
-            this.router.navigate(['/']);
+            this.router.navigate(['/admin/orders']);
           },
           error: (err: HttpErrorResponse) => {
-            
             this.toastService.showToast({
               error: err,
               defaultMsg: 'Lỗi trong quá trình đặt hàng',
@@ -190,11 +130,10 @@ export class OrderComponent extends BaseComponent implements OnInit {
             });
           }
         });
-      }
 
     } else {
       this.toastService.showToast({
-        error: 'Vui lòng điền đầy đủ thông tin bắt buộc',
+        error: 'Vui lòng điền đầy đủ thông tin bắt buộc hoặc chọn sản phẩm',
         defaultMsg: 'Vui lòng điền đầy đủ thông tin bắt buộc',
         title: 'Lỗi Dữ Liệu'
       });
@@ -233,27 +172,6 @@ export class OrderComponent extends BaseComponent implements OnInit {
     }
   }
 
-  applyCoupon(): void {
-    const couponCode = this.orderForm.get('couponCode')!.value;
-    if (!this.couponApplied && couponCode) {
-      this.calculateTotal();
-      this.couponService.calculateCouponValue(couponCode, this.totalAmount)
-        .subscribe({
-          next: (apiResponse: ApiResponse) => {
-            this.totalAmount = apiResponse.data;
-            this.couponApplied = true;
-          },
-          error: (error) => {
-            this.toastService.showToast({
-              error: error,
-              defaultMsg: 'Mã giảm giá không hợp lệ',
-              title: 'Lỗi Coupon'
-            });
-          }
-        });
-    }
-  }
-
   private updateCartFromCartItems(): void {
     this.cart.clear();
     this.cartItems.forEach(item => {
@@ -261,4 +179,10 @@ export class OrderComponent extends BaseComponent implements OnInit {
     });
     this.cartService.setCart(this.cart);
   }
+
+  
+  onBack() {
+    this.router.navigate(['/admin/products']);
+  }
+
 }

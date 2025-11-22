@@ -8,12 +8,10 @@ import { ActivatedRoute } from '@angular/router';
 import { TokenService } from '../../services/token.service';
 import { RoleService } from '../../services/role.service';
 import { CartService } from '../../services/cart.service';
-import { CouponService } from '../../services/coupon.service';
 import { OrderService } from '../../services/order.service';
 import { Location } from '@angular/common';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-import { PaymentService } from '../../services/payment.service';
 
 export class BaseComponent {
     toastService = inject(ToastService);
@@ -25,10 +23,8 @@ export class BaseComponent {
     userService: UserService = inject(UserService);
     roleService: RoleService = inject(RoleService);
     cartService: CartService = inject(CartService);
-    couponService = inject(CouponService);
     orderService = inject(OrderService);
     authService = inject(AuthService);
-    paymentService = inject(PaymentService);
     
     document: Document = inject(DOCUMENT);
     location: Location = inject(Location);

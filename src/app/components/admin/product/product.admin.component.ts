@@ -63,9 +63,6 @@ export class ProductAdminComponent extends BaseComponent implements OnInit {
           this.totalPages = response.totalPages;
           this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
         },
-        complete: () => {
-          ;
-        },
         error: (error: HttpErrorResponse) => {
           this.toastService.showToast({
             error: error,
@@ -106,10 +103,7 @@ export class ProductAdminComponent extends BaseComponent implements OnInit {
               defaultMsg: 'Xóa sản phẩm thành công',
               title: 'Thành Công'
             });
-            location.reload();          
-          },
-          complete: () => {
-            ;          
+      this.getProducts(this.keyword, this.selectedCategoryId, this.currentPage, this.itemsPerPage);  
           },
           error: (error: HttpErrorResponse) => {
             this.toastService.showToast({
@@ -120,5 +114,20 @@ export class ProductAdminComponent extends BaseComponent implements OnInit {
           }
         });  
       }      
-    }      
+    }   
+    
+    
+  addToCart(productId: number): void {
+      this.cartService.addToCart(productId, 1);
+  }
+
+      buyNow() {
+      
+      this.router.navigate(['/orders']);
+    } 
+
+    getSelectedNumber() {
+      return this.cartService.getCart().size;
+    }
+
 }

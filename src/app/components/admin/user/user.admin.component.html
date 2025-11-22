@@ -3,12 +3,12 @@
     <thead>
       <tr>
         <th>ID</th>
-        <th>Full Name</th>
-        <th>Phone</th>
-        <th>Address</th>
-        <th>State</th>
-        <th>Role</th>
-        <th>Action</th>
+        <th>Họ và tên</th>
+        <th>Số điện thoại</th>
+        <th>Địa chỉ</th>
+        <th>Trạng thái</th>
+        <th>Vai trò</th>
+        <th>Thao tác</th>
       </tr>
     </thead>
     <tbody>
@@ -18,17 +18,22 @@
             <td>{{ user.fullname }}</td>
             <td>{{ user.phone_number }}</td>
             <td>{{ user.address }}</td>
-            <td>{{ user.is_active ? 'Active' : 'Inactive' }}</td>
+            <td>{{ user.is_active ? 'Hoạt động' : 'Không hoạt động' }}</td>
             <td>{{ user.role.name }}</td>
             <td>
                 <button class="btn" [ngClass]="{
                         'btn-danger': user.is_active,
                         'btn-success': !user.is_active
                       }" (click)="toggleUserStatus(user)">
-                    {{ user.is_active ? 'Block User' : 'Unblock User' }}
+                    {{ user.is_active ? 'Khóa' : 'Mở khóa' }}
+                </button>
+                <button 
+                  class="btn btn-secondary ms-2" 
+                  (click)="updateUser(user.id)">
+                    Cập nhật
                 </button>
                 <button class="btn btn-primary ms-2" (click)="resetPassword(user.id)">
-                    Reset Password
+                    Reset mật khẩu
                 </button>
             </td>
         </tr>

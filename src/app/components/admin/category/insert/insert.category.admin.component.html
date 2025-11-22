@@ -1,20 +1,37 @@
 <div class="container">
-    <div class="row">
-      <div class="col-md-6 offset-md-3">
-        <h3>Thêm mới</h3>
-        <div class="row mb-3">
-          <form (ngSubmit)="insertCategory()">
-            <div class="form-group mb-3">
-              <label for="name">Nhập tên danh mục</label>
-              <input type="text" id="name" [(ngModel)]="insertCategoryDTO.name" 
-              name="name" class="form-control" required>
-            </div>              
-            <div class="col-12 gap-4 d-flex justify-content-end">
-              <button type="button" class="btn btn-danger" (click)="onBack()">Quay lại</button>
-              <button type="submit" class="btn btn-primary">Lưu</button>
-            </div>
-          </form>
-        </div>        
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <h3>Thêm mới danh mục</h3>
+      <div class="row mb-3">
+        <form (ngSubmit)="insertCategory()">
+          <div class="form-group mb-3">
+            <label for="name">Tên danh mục</label>
+            <input
+              [(ngModel)]="insertCategoryDTO.name"
+              class="form-control"
+              id="name"
+              name="name"
+              required
+              type="text"
+            >
+          </div>
+          <div class="col-12 gap-4 d-flex justify-content-end">
+            <button
+              (click)="onBack()"
+              class="btn btn-danger"
+              type="button"
+            >
+              Quay lại
+            </button>
+            <button
+              class="btn btn-primary"
+              type="submit"
+            >
+              Lưu
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
+</div>

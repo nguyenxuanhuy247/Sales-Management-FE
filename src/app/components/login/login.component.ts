@@ -21,8 +21,6 @@ import { of } from 'rxjs';
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
     imports: [
-        FooterComponent,
-        HeaderComponent,
         CommonModule,
         FormsModule
     ]
@@ -78,47 +76,6 @@ export class LoginComponent extends BaseComponent implements OnInit{
       }
     });    
   }
-  createAccount() {
-    
-    // Chuyển hướng người dùng đến trang đăng ký (hoặc trang tạo tài khoản)
-    this.router.navigate(['/register']); 
-  }
-  loginWithGoogle() {    
-    
-    this.authService.authenticate('google').subscribe({
-      next: (url: string) => {
-        
-        // Chuyển hướng người dùng đến URL đăng nhập Google
-        window.location.href = url;
-      },
-      error: (error: HttpErrorResponse) => {
-        this.toastService.showToast({
-          error: error,
-          defaultMsg: 'Lỗi kết nối với Google',
-          title: 'Lỗi Đăng Nhập'
-        });
-      }
-    });
-  }  
-  
-  loginWithFacebook() {         
-    // Logic đăng nhập với Facebook
-    
-    this.authService.authenticate('facebook').subscribe({
-      next: (url: string) => {
-        
-        // Chuyển hướng người dùng đến URL đăng nhập Facebook
-        window.location.href = url;
-      },
-      error: (error: HttpErrorResponse) => {
-        this.toastService.showToast({
-          error: error,
-          defaultMsg: 'Lỗi kết nối với Facebook',
-          title: 'Lỗi Đăng Nhập'
-        });
-      }
-    });
-  }
   
   login() {
     const loginDTO: LoginDTO = {
@@ -148,7 +105,11 @@ export class LoginComponent extends BaseComponent implements OnInit{
             if (this.userResponse?.role.name === 'admin') {
               this.router.navigate(['/admin']);
             } else if (this.userResponse?.role.name === 'user') {
-              this.router.navigate(['/']);
+              this.toastService.showToast({
+                error: "Vui lòng đăng nhập tài khoản admin",
+                defaultMsg: 'Vui lòng đăng nhập tài khoản admin',
+                title: 'Lỗi Đăng Nhập'
+              });
             }
           }),
           catchError((error: HttpErrorResponse) => {

@@ -82,16 +82,17 @@ export class UserAdminComponent extends BaseComponent implements OnInit{
     updateUser(userId: number) {
       
       // Điều hướng đến trang detail-user với userId là tham số
-      this.router.navigate(['/admin/users/update', userId]);
+      this.router.navigate(['/user-profile', userId]);
     }  
+
     resetPassword(userId: number) {
       this.userService.resetPassword(userId).subscribe({
         next: (apiResponse: ApiResponse) => {
-          console.error('Block/unblock user successfully');
-          //location.reload();
-        },
-        complete: () => {
-          // Handle complete event
+          this.toastService.showToast({
+            error: null,
+            defaultMsg: 'Đặt lại mật khẩu thành công',
+            title: 'Thành Công'
+          });
         },
         error: (error: HttpErrorResponse) => {
           this.toastService.showToast({
@@ -119,8 +120,7 @@ export class UserAdminComponent extends BaseComponent implements OnInit{
     
         this.userService.toggleUserStatus(params).subscribe({
           next: (response: any) => {
-            console.error('Block/unblock user successfully');
-            location.reload();
+    this.getUsers(this.keyword.trim(), this.currentPage, this.itemsPerPage);
           },
           complete: () => {
             // Handle complete event

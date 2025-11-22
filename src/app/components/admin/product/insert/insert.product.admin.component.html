@@ -1,44 +1,93 @@
 <div class="container">
-    <div class="row">
-      <div class="col-md-6 offset-md-3">
-        <h3>Thêm mới sản phẩm</h3>
-        <form (ngSubmit)="insertProduct()" enctype="multipart/form-data">
-          <div class="form-group">
-            <label for="name">Tên sản phẩm</label>
-            <input type="text" id="name" [(ngModel)]="insertProductDTO.name" name="name" class="form-control" required>
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <h3>Thêm mới sản phẩm</h3>
+      <form
+        (ngSubmit)="insertProduct()"
+        enctype="multipart/form-data"
+      >
+        <div class="form-group">
+          <label for="name">Tên sản phẩm</label>
+          <input
+            [(ngModel)]="insertProductDTO.name"
+            class="form-control"
+            id="name"
+            name="name"
+            required
+            type="text"
+          >
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="price">Giá</label>
+          <input
+            [(ngModel)]="insertProductDTO.price"
+            class="form-control col-md-3"
+            id="price"
+            name="price"
+            required
+            type="text"
+          >
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="description">Mô tả</label>
+          <textarea
+            [(ngModel)]="insertProductDTO.description"
+            class="form-control"
+            id="description"
+            name="description"
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="category">Danh mục</label>
+          <select
+            [(ngModel)]="insertProductDTO.category_id"
+            class="form-control"
+            id="category"
+            name="category"
+            required
+          >
+            <!-- Display list of categories -->
+            @for (category of categories; track category.id) {
+              <option
+                [value]="category.id"
+              >{{ category.name }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="images">Thêm ảnh (tối đa 5 ảnh):</label>
+          <div class="mt-2">
+            <input
+              (change)="onFileChange($event)"
+              accept="image/*"
+              id="images"
+              multiple
+              name="images"
+              type="file"
+            >
           </div>
-  
-          <div class="form-group mb-3">
-            <label for="price">Nhập giá</label>
-            <input type="text" id="price" [(ngModel)]="insertProductDTO.price" name="price" class="form-control col-md-3" required>
-          </div>
-  
-          <div class="form-group mb-3">
-            <label for="description">Mô tả</label>
-            <textarea id="description" [(ngModel)]="insertProductDTO.description" name="description" class="form-control" required></textarea>
-          </div>
-  
-          <div class="form-group mb-3">
-            <label for="category">Danh mục</label>
-            <select id="category" [(ngModel)]="insertProductDTO.category_id" name="category" class="form-control" required>
-              <!-- Display list of categories -->
-              @for(category of categories; track category.id) {
-                <option 
-                [value]="category.id">{{ category.name }}</option>
-              }              
-            </select>
-          </div>
-  
-          <div class="form-group mb-3">
-            <label for="images">Images (up to 5):</label>
-            <input type="file" id="images" name="images" multiple (change)="onFileChange($event)" accept="image/*">
-          </div>
-  
-            <div class="col-12 gap-4 d-flex justify-content-end">
-              <button type="button" class="btn btn-danger" (click)="onBack()">Quay lại</button>
-              <button type="submit" class="btn btn-primary">Lưu</button>
-            </div>
-        </form>
-      </div>
+        </div>
+
+        <div class="col-12 gap-4 d-flex justify-content-end">
+          <button
+            (click)="onBack()"
+            class="btn btn-danger"
+            type="button"
+          >Quay lại
+          </button>
+          <button
+            class="btn btn-primary"
+            type="submit"
+          >Lưu
+          </button>
+        </div>
+      </form>
     </div>
   </div>
+</div>

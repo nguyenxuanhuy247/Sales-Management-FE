@@ -25,16 +25,7 @@ export class OrderDTO {
   
   total_money?: number;
 
-  shipping_method: string;
-
   order_date?: Date;
-
-  payment_method: string;
-
-  coupon_code: string;
-
-  vnp_txn_ref?: string; // Thêm trường này để lưu mã tham chiếu VNPay
-
   cart_items: { product_id: number, quantity: number }[]; // Thêm cart_items để lưu thông tin giỏ hàng
 
 
@@ -48,9 +39,6 @@ export class OrderDTO {
     this.note = data.note;
     this.order_date = data.order_date;
     this.total_money = data.total_money;
-    this.shipping_method = data.shipping_method;
-    this.payment_method = data.payment_method;
-    this.coupon_code = data.coupon_code;
     this.cart_items = data.cart_items;
   }
 }
