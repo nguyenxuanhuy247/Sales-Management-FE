@@ -1,0 +1,10 @@
+{
+    "product.update.id": "ID sản phẩm",
+    "product.update.name": "Tên sản phẩm",
+    "product.update.price": "Giá",
+    "product.update.description": "Mô tả",
+
+    "category.update.id": "ID danh mục sản phẩm",
+    "category.update.name": "Tên danh mục sản phẩm",
+    "category.update.description": "Mô tả"
+}

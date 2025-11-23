@@ -9,3 +9,11 @@ export class InsertCategoryDTO {
     this.name = data.name;
   }
 }
+
+
+export class CategoryRequest {
+  id: number = -1;
+  name: string = "";
+  description: string = "";
+  date: string = "";
+}

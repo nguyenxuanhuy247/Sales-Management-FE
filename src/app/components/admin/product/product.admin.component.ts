@@ -6,6 +6,9 @@ import {FormsModule} from '@angular/forms';
 import {ApiResponse} from '../../../responses/api.response';
 import {HttpErrorResponse} from '@angular/common/http';
 import {BaseComponent} from '../../base/base.component';
+import { UpdateCategoryDTO } from '../../../dtos/category/update.category.dto';
+import { CategoryRequest } from '../../../dtos/category/insert.category.dto';
+import { Mapper } from '../../../utils/mapper';
 
 @Component({
   selector: 'app-product-admin',
@@ -16,7 +19,7 @@ import {BaseComponent} from '../../base/base.component';
   imports: [
     CommonModule,
     FormsModule,
-  ]
+  ],
 })
 export class ProductAdminComponent extends BaseComponent implements OnInit {
   selectedCategoryId: number = 0; // Giá trị category được chọn
@@ -28,7 +31,9 @@ export class ProductAdminComponent extends BaseComponent implements OnInit {
   keyword: string = "";
   localStorage?: Storage;
 
-  constructor() {
+  constructor(
+    private mapper: Mapper
+  ) {
     super();
     this.localStorage = document.defaultView?.localStorage;
   }
@@ -61,6 +66,26 @@ export class ProductAdminComponent extends BaseComponent implements OnInit {
         this.products = response.products;
         this.totalPages = response.totalPages;
         this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
+
+        const result = this.translateService.translate(this.products[0], 'product', {
+          product_images: 'category'
+        });
+        const product1 = this.products[0] as Product;
+        const category1 = new CategoryRequest();
+        const result1 = this.mapper.map(product1, category1, {
+          apiNameSourceConfigs: {
+            default: "product"
+          },
+          apiNameTargetConfigs: {
+            default: "category"
+          },
+          fieldMappings: {
+            category_id: 'id'
+          },
+          sourceName: "Product",
+          targetName: "Category"
+        });
+        console.log("result1 ", result1);
       },
       error: (error: HttpErrorResponse) => {
         this.toastService.showToast({

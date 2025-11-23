@@ -8,6 +8,7 @@ import { TokenService } from '../../services/token.service';
 import { RoleService } from '../../services/role.service';
 import { CartService } from '../../services/cart.service';
 import { OrderService } from '../../services/order.service';
+import { TranslateService } from '../../utils/translate.service';
 
 export class BaseComponent {
   toastService = inject(ToastService);
@@ -20,6 +21,7 @@ export class BaseComponent {
   roleService: RoleService = inject(RoleService);
   cartService: CartService = inject(CartService);
   orderService = inject(OrderService);
+  translateService = inject(TranslateService);
 
   generateVisiblePageArray(currentPage: number, totalPages: number): number[] {
     const maxVisiblePages = 5;
